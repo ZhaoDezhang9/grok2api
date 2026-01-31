@@ -60,6 +60,19 @@ curl https://你的服务器地址/v1/chat/completions \
 
 ## 如何部署
 
+### Docker 运行
+
+```bash
+docker run -d --name grok2api \
+  -p 8000:8000 \
+  -v grok_data:/app/data \
+  -v $(pwd)/logs:/app/logs \
+  -e STORAGE_MODE=file \
+  ghcr.io/chenyme/grok2api:latest
+```
+
+> 如果使用 MySQL/Redis，请额外设置 `DATABASE_URL` 环境变量（格式见下方说明）。
+
 ### docker-compose
 
 ```yaml
@@ -83,6 +96,17 @@ services:
 volumes:
   grok_data:
 ```
+
+### 本地运行（无需容器）
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+> 生产环境推荐使用 `docker` 或 `docker-compose` 部署，便于持久化数据与日志。
 
 ### 环境变量说明
 
